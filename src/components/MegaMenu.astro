@@ -1,0 +1,73 @@
+---
+import { NAV } from "../config/menu";
+import Toggle from "./islands/MegaToggle.tsx"; // isla mínima (React o Preact)
+---
+
+<nav class="w-full bg-white/90 backdrop-blur border-b">
+  <div class="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-6 py-3">
+    <a href="/" class="text-2xl font-extrabold tracking-tight text-slate-800">Avantys</a>
+
+    <!-- Botón móvil -->
+    <Toggle client:visible class="md:hidden" />
+
+    <!-- Menú desktop -->
+    <ul class="hidden md:flex items-center gap-6">
+      {NAV.map(cat => (
+        <li class="relative group">
+          <button
+            class="inline-flex items-center gap-1 py-2 text-slate-800 hover:text-blue-700 font-medium"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls={`panel-${cat.id}`}
+          >
+            {cat.label}
+            <svg class="w-4 h-4 opacity-70" viewBox="0 0 20 20" fill="currentColor"><path d="M5.5 7.5l4.5 4 4.5-4"/></svg>
+          </button>
+
+          <!-- Panel -->
+          <div
+            id={`panel-${cat.id}`}
+            role="menu"
+            class="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-2 opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto transition
+                   w-[min(90vw,1024px)]"
+          >
+            <div class="rounded-2xl border shadow-xl bg-white p-6">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {cat.columns.map((col) => (
+                  <section>
+                    {col.title && <h3 class="text-sm font-semibold text-slate-500 mb-3">{col.title}</h3>}
+                    <ul class="space-y-3">
+                      {col.items.map(item => (
+                        <li>
+                          <a href={item.href} class="block rounded-lg p-3 hover:bg-slate-50 focus:bg-slate-50 focus:outline-none">
+                            <div class="flex items-start gap-3">
+                              {item.icon && <img src={item.icon} alt="" class="w-6 h-6 mt-1" />}
+                              <div>
+                                <div class="flex items-center gap-2">
+                                  <span class="font-medium text-slate-900">{item.label}</span>
+                                  {item.badge && <span class="text-[10px] px-2 py-0.5 rounded-full border">{item.badge}</span>}
+                                </div>
+                                {item.desc && <p class="text-sm text-slate-600 leading-snug mt-0.5">{item.desc}</p>}
+                              </div>
+                            </div>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                ))}
+              </div>
+            </div>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <!-- Drawer móvil (lo pinta la isla Toggle) -->
+  <div id="mega-drawer" class="md:hidden"></div>
+</nav>
+
+<style>
+/* Cerrar panel si se sale con el ratón (opcional: puedes dejar solo group-hover) */
+</style>
